@@ -1,0 +1,27 @@
+body{
+    color:rgba(14, 10, 134, 0.89);
+}
+blockquote 
+{ 
+    color: blue ;
+}
+h1 { 
+    color: rgba(0,0,0,0.4);
+}
+strong {
+    color: #00f; 
+    color: #f00;
+}
+ p { 
+     color: saddlebrown;
+} 
+
+div{
+    color:red;
+    line-height: 0em;
+    font-size: 20px;
+    border: 1px solid green;
+    text-align:center;
+/*  letter-spacing:35px;*/
+    letter-spacing:2em;
+}
