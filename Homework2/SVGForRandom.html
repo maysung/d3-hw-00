@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <style>
+       
+    </style>
+</head>
+<body>
+    <svg width="400" height="200">
+            
+    </svg>
+    <script>
+        for (i = 0; i < 20; i++) {
+            var xwidth = random(20, 300);
+            var svg = d3.select("svg")
+            d3.select("svg")
+           .append("rect")
+           .attr({
+               x: 10,
+               y: 10 + 12 * i,
+               //width: 20*(i+1),
+               width: xwidth,
+               height: 10,
+               fill: "red",
+           });
+            svg.append("text")
+                .attr({
+                    fill: "#000",
+                    x: xwidth+15,
+                    y: 10 + 10 * (i+1)+ 2*i
+                }).text(xwidth);
+        }
+        function random(N, M) {
+            console.log(N);
+            var num = Math.ceil(Math.random() * (M - N) + N);
+            return num;
+        }
+       
+    </script>
+</body>
+</html>

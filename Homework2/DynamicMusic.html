@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <style>
+
+    </style>
+</head>
+<body>
+    <svg width="400" height="300">
+         
+    </svg>
+    <script>
+        var SX = 0; //開始畫線開始X軸
+        var SY = 50; //開始畫線開始Y軸
+
+        var EX = 400;//線的終點 X軸
+        var EY = 300; //線的終點 Y軸
+        var Lheight = 50; //線的間距
+        var LWidth=10;
+        var RWeight = 10;
+        var RHeight =  (Lheight * 2) + (Lheight/2);
+        var svg = d3.select("svg")
+        svg.append("rect")
+          .attr({
+              x: 0,
+              y: 0,
+              width: EX,
+              height: EY,
+              fill: "OLDLace"
+          });
+        
+
+        for (i=0;i<5;i++){
+        svg.append("line")
+            .attr({
+                x1:SX,
+                y1: i * (Lheight) + SY,
+                x2:EX,
+                y2: i * (Lheight) + SY,
+                width: LWidth,
+                fill: "black",
+                strokeWidth: 5,
+                stroke:"black"
+                
+                })
+        }
+        svg.append("circle")
+           .attr({
+               cx: (EX/2)+(RWeight/2)-(Lheight/2),
+               cy: RHeight+SY,
+               r: Lheight/2,
+               fill: "black"               
+           });
+        svg.append("rect")
+           .attr({
+               x: EX/2-RWeight/2,
+               y: SY,
+               width: RWeight,
+               height:RHeight,
+               fill: "black"
+           });
+        svg.append("text")
+           .attr({
+               x:EX/2-30,
+               y:EY,
+               fill: "black",
+               "font-size": 64,
+               "font-family":"arial"
+           }).text("A");
+
+
+
+    </script>
+</body>
+
+</html>
