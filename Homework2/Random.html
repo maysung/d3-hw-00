@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>隨機產生1911至2017的數字</title>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <style>
+        p{
+            border:2px solid red;
+            height:40px;
+            width:120px;
+            line-height:40px;
+            text-align:center;
+        }
+    </style>
+</head>
+<body>
+    <p></p>
+    <input type="button" value="click!!" onclick="launch()" />
+
+    <script>
+        function random(N, M) {
+            console.log(N);
+            var num = Math.ceil(Math.random() * (M - N) + N);
+            return num;
+        }
+
+        function launch() {            
+            var num = random(1911, 2017);            
+            d3.select("p").text(num);
+         
+        }
+    </script>
+
+</body>
+</html>

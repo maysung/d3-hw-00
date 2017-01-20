@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>產生平方</title>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+</head>
+<body>
+    <input type="text" id="TX" class="number">
+    <input type="button" onclick="square()" value="平方">
+    <script>
+        function square(){
+            var num = d3.select("#TX").property("value");            
+            d3.select("#TX").property("value", num * num);            
+        } ;
+    </script>
+
+</body>
+</html>
