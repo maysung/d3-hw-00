@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>2016年8月台北市發票金額>10億</title>    
+    <script src="https://d3js.org/d3.v3.min.js"></script>    
+</head>
+<body>
+    <svg width="400" height="300">
+
+    </svg>
+
+    <script>
+        d3.json("invoice-taipei.json", function (dataSet) {
+            console.table(dataSet);
+            var svg = d3.select("svg");
+            var count = 0;//符合條件的是第幾筆資料
+            for (var i = 0; i < dataSet.length; i++) {
+                if (dataSet[i].date === "2016/8/1" &&
+                    +dataSet[i].amount > 1000000000 &&
+                    dataSet[i].cid === "A") {
+                    d3.select("svg")
+                      .append("rect")
+                      .attr({
+                          x: 200,
+                          y: 10 + 12 * count,
+                          width: +dataSet[i].amount / 100000000,
+                          //發票金額很大，這樣可以縮小比例
+                          height: 10,
+                          fill: "red"
+                      });
+                    //顯示長條圖上的品項
+                    d3.select("svg")
+                      .append("text")
+                      .attr({
+                          x: 0,
+                          y: 16 + 12 * count,
+                          "font-size": 5
+                      }).text(dataSet[i].industry);
+                    //顯示數量在長條圖上
+                    d3.select("svg")
+                      .append("text")
+                      .attr({
+                          x: 200 + +dataSet[i].amount / 100000000 + 20,                          
+                          y: 16 + 12 * count,
+                          "font-size": 5
+                      }).text(dataSet[i].amount);
+                    count = count + 1;
+                }
+            }
+        });
+
+    </script>
+</body></html>

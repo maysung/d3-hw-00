@@ -1,0 +1,132 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>建立簡單動態圖表</title>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+</head>
+<body>
+    <input type="button" value="新增" onclick="update()" />
+    <input type="button" value="移除" onclick="update_del()"/>
+        <script>
+        var arr = [85, 60, 99, 79, 77, 82];
+        var w = 900;
+        var h = 300;
+        var padding = 100;
+
+        svg();
+        bind(arr);
+        render();
+        bind_t();
+        render_t();
+
+        function svg() {
+            d3.select("body")
+                .append("svg")
+                .attr({
+                    width:w,
+                    height:h
+                })                
+        }
+
+
+
+        //資料綁定
+        function bind(dataSet) {
+            //1
+            var selection = d3.select("svg")
+                            .selectAll("rect")
+                            .data(arr);
+            //2
+            selection.enter()
+                .append("rect");
+            //3
+            selection.exit()
+                .remove();
+        }
+
+        //文字資料綁定
+        function bind_t(dataSet) {
+            //1
+            var selection = d3.select("svg")
+                            .selectAll("text")
+                            .data(arr);
+            //2
+            selection.enter()
+                .append("text");
+            //3
+            selection.exit()
+                .remove();
+        }
+
+        //資料繪圖
+        function render() {
+            d3.selectAll("rect")
+                    .attr({
+                        x:  function (d,i) {
+                            return padding + 42 * i;
+                        },
+
+                        y: function (d) {
+                              return h - padding -d;
+                            
+                            },
+                        width: 40,
+
+                        height:function (d) {
+                            return d;
+                        },
+                        fill: function (d) {
+                            if (d <70) {
+                                return "red";
+                            }
+                            else {
+                                return "lightgreen";
+                            }
+                        }                            
+                    })
+        }
+        //資料繪圖
+        function render_t() {
+            d3.selectAll("text")
+                    .attr({
+                        x: function (d, i) {
+                            return padding + 42 * i + 10;
+                        },
+
+                        y: function (d) {
+                            return h - padding + 20;
+                        },
+                        "font-size":22
+                        
+                    }).text( function (d) {
+                        return d ;
+                    })
+        }
+
+        function update(){
+            var num= random(40,100);
+            arr.push(num);
+            console.log(arr);
+            bind(arr);
+            render();
+            bind_t();
+            render_t();
+        }
+
+        function random(N, M) {
+            console.log(N);
+            var num = Math.ceil(Math.random() * (M - N) + N);
+            return num;
+        }
+        function update_del() {
+            arr.shift();
+            bind(arr);
+            render();
+            bind_t();
+            render_t();
+        }
+
+    </script>
+</body>
+</html>

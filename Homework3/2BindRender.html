@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>把數字小於70改為紅色</title>
+    <script src="d3.min.js"></script>
+    
+</head>
+<body>    
+    <script>
+        var arr = [85, 60, 99, 49, 77, 99];
+        bind(arr);
+        render();
+        //資料綁定
+        function bind(dataSet) {
+            //1
+            var selection = d3.select("body")
+                            .selectAll("div")
+                            .data(dataSet);
+
+            //2
+            selection.enter()
+                .append("div");
+            //3
+            selection.exit()
+                .remove();
+        }
+        
+        //資料繪圖
+        function render() {
+            d3.selectAll("div").text(function (d, i) {
+                //return  "位置序號: " + i + "內容: " + d;
+                return  i+1 + ": " + d;
+                
+            }).style({
+                color: function (d) {
+                    if (d < 70)
+                    {
+                        return "red";
+                    }
+                    else
+                    {
+                        return "blue";
+                    }
+                  
+                }
+            }
+            );
+        }
+        
+    </script>
+</body>
+</html>
