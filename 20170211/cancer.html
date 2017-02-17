@@ -9,6 +9,10 @@
         svg{
           float:left;  
         }
+        div{            
+            float:left;
+            margin-left:5px;            
+        }
         body{
             background: #eee;
         }
@@ -44,7 +48,7 @@
           <p id="cancerNumber">cancerNumber</p>
     </div>
     <script>
-        var w = 1000;
+        var w = 900;
         var h = 600;
         var padding = 90;
         var letterList = ["台閩地區","台北市","台中市","台南市","高雄市","基隆市","新竹市","嘉義市","新北市","桃園市","新竹縣","宜蘭縣","苗栗縣","彰化縣","南投縣","雲林縣","嘉義縣","屏東縣","澎湖縣","花蓮縣","台東縣","連江縣","金門縣"
@@ -171,7 +175,7 @@
             });
             
             //畫出按鈕們
-            var selection = d3.select("body")
+            var selection = d3.select("body").append("div")
                 .append("select")
                 .selectAll("option")
                 .data(filterIndustryArr);
