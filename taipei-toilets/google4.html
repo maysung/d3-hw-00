@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+        <style>
+
+        html, body, #map {
+          width: 99%;
+          height: 90%;
+          margin: 0;
+          padding: 0;
+          
+        }
+        
+        .stations, .stations svg {
+          position: absolute;
+        }
+
+        .stations svg {
+          width: 260px;
+          height: 70px;
+          padding-right: 100px;
+          font: 10px sans-serif;
+        
+        }
+
+        .stations circle {
+          fill: gold;
+          stroke: red;
+          stroke-width: 2.5px;
+            background-image: blue;
+        }
+        </style>
+        <!-- Google Map API 貼上金鑰----->
+        <script src="//maps.google.com/maps/api/js?key=AIzaSyDphAN-aHrOrgzb-TSg7-V3X6A_Yy84_rI&sensor=true"></script>
+        <script src="//d3js.org/d3.v3.min.js"></script>
+        
+    </head>
+    <body>
+        <div id="map"></div>
+        <script>
+            
+            d3.csv("bestfactorylist.csv", function(dataSet) {
+                resetGoogleMap(25.021918,121.535285,dataSet) ;
+                btnList(dataSet);
+               
+            });
+            
+            function resetGoogleMap(a,b,dataSet){            
+            // 產生 Google Map…
+            var map = new google.maps.Map(d3.select("#map").node(), {
+                //zoom:數字愈大
+              zoom: 14,
+                //設定地圖中心點
+              //center: new google.maps.LatLng(24.781036,121.732097),
+                center: new google.maps.LatLng(a,b),
+              mapTypeId: google.maps.MapTypeId.TERRAIN
+            });
+                
+            // 讀取外部資料，讀完後建立一個overlay
+            
+              
+             console.table(dataSet);
+            
+              var overlay = new google.maps.OverlayView();
+  
+              // 當overlay加入後，增加一個分層layer
+                
+              overlay.onAdd = function() {
+                var layer = d3.select(this.getPanes().overlayMouseTarget).append("div")
+                    .attr("class", "stations");
+
+                // 畫出獨立的每一個資料點
+                overlay.draw = function() {
+                  var projection = this.getProjection(),
+                      padding = 10;
+
+                  var marker = layer.selectAll("svg")
+                      .data(d3.entries(dataSet))
+                      .each(transform)
+                      .enter()
+                      .append("svg")
+                      .each(transform)
+                      .attr({
+                          class:"marker"                            
+                            });
+
+                  // 增加圓點，並打開滑鼠事件，讓文字在滑鼠移入時出現
+                  marker.append("circle")
+                      .attr("r", 10)
+                      .attr("cx", padding)
+                      .attr("cy", padding)
+                  
+                      .on("mouseover",function(d){
+                        /*                         */  d3.select(this.parentNode).select("text").attr({
+                             opacity: 1
+                          });
+                      })
+                      .on("mouseout",function(d){  d3.select(this.parentNode).select("text").attr({
+                             opacity: 0
+                          });
+                      });
+
+                  // 增加文字說明
+                    
+                  marker.append("text")
+                      .attr({
+                          x:padding + 20,
+                          y: padding,
+                          "font-size": "13px",
+                          opacity: 0
+                          
+                      })     
+                      .text(function(d) {
+                        return d.value.factory + " : " +d.value.address  ;
+                      })
+                  
+                  function transform(d) {
+//                      console.log(d);
+                    d = new google.maps.LatLng(d.value.lat,d.value.lng);
+                      //實際經緯度與網頁座標的轉換
+                    d = projection.fromLatLngToDivPixel(d);
+                      
+                    return d3.select(this)
+                        .style("left", (d.x - padding) + "px")
+                        .style("top", (d.y - padding) + "px");
+                  }
+                };
+              };
+
+              // 綁定overlay到地圖中
+              overlay.setMap(map);            
+              
+                        
+}            
+            
+            
+            
+            
+            function btnList(dataSet){
+            //顏色比例尺
+            var fScale = d3.scale.category20();
+             //觀光工廠名單           
+            var factoryArr = dataSet.map(function(d){
+               return d.factory;
+            }); 
+            
+            //uniqueIndustryArr: 觀光工廠陣列(無重複項目) 
+            var uniquefactoryArr = unique(factoryArr);
+            
+            //filterIndustryArr: 觀光工廠陣列(去除空白項目) 
+            var filterfactoryArr = uniquefactoryArr.filter(function(d){
+               return d!=""; 
+            });
+                
+                
+            //畫出下拉式選單們
+            var selection = d3.select("body").append("div")
+                .append("select")
+                .selectAll("option")
+                .data(filterfactoryArr);
+            
+            selection.enter()
+                .append("option")
+                .property({                   
+                    value:function (d){
+                        //console.log(d);
+                        return d;
+                    }
+                })
+                .style("background", function (d,i){
+                        return fScale(i);
+                    })                
+                .text(function (d){
+                //console.log(d);
+                return d;
+                });
+            
+            d3.select("select").on("change",function (d){
+                var value=d3.select("select")
+                            .property("value");
+                //console.log(value);
+                update(value);
+            });
+                
+            //畫出按鈕們
+            var selection = d3.select("body")
+                .append("div")
+                .selectAll("input")
+                .data(filterfactoryArr);
+            
+            selection.enter()
+                .append("input")
+                .attr({
+                    value:function (d){
+                        return d;
+                    },
+                   
+                    type:"button"
+                    
+                })
+                .style("background", function (d,i){
+                        return fScale(i);
+                    })
+                .on("click",function(d){
+                    //當行業別按鈕按下時執行                
+                    update(d);                   
+                
+                });
+                
+                function update(X){
+                //過濾行業別符合者
+                var newDataSet = dataSet.filter(function(d){
+                    return X===d.factory;
+                });
+                
+                //重新給經緯度，重新定址    
+                resetGoogleMap(newDataSet[0].lat,newDataSet[0].lng,dataSet);               
+             }
+                
+                
+                
+                
+                
+                
+                
+              
+            
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+        
+            
+            function unique(array){
+              var n = []; 
+              for(var i = 0; i < array.length; i++){
+                if (n.indexOf(array[i]) == -1){
+                    n.push(array[i]);
+                }
+              }
+              return n;
+            }           
+           
+     }
+            </script>
+    </body>
+</html>
+
